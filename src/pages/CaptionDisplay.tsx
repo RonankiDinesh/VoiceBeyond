@@ -103,34 +103,48 @@ export default function CaptionDisplay() {
     <div className="min-h-screen gradient-hero">
       <Header />
 
-      <main className="container mx-auto px-4 pt-24 pb-12">
+      <main className="container mx-auto px-3 sm:px-4 pt-20 sm:pt-24 pb-8 sm:pb-12">
         {/* Top Controls */}
-        <div className="flex items-center justify-between mb-6">
-          <Button asChild variant="outline" size="sm">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-4 sm:mb-6">
+          <Button asChild variant="outline" size="sm" className="w-full sm:w-auto">
             <Link to="/select">
               <ChevronLeft className="mr-2 w-4 h-4" />
-              Change Source
+              <span className="hidden xs:inline">Change Source</span>
+              <span className="xs:hidden">Back</span>
             </Link>
           </Button>
 
-          <div className="flex items-center gap-4">
-            <ConnectionStatus isConnected={isConnected} />
-            <LatencyIndicator latency={latency} />
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setOverlayMode(!overlayMode)}
-            >
-              <Maximize2 className="mr-2 w-4 h-4" />
-              Overlay Mode
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setShowSettings(!showSettings)}
-            >
-              <Settings className="w-4 h-4" />
-            </Button>
+          <div className="flex items-center gap-2 sm:gap-4 justify-between sm:justify-end">
+            <div className="flex items-center gap-2">
+              <ConnectionStatus isConnected={isConnected} />
+              <LatencyIndicator latency={latency} />
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setOverlayMode(!overlayMode)}
+                className="hidden sm:flex"
+              >
+                <Maximize2 className="mr-2 w-4 h-4" />
+                Overlay Mode
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setOverlayMode(!overlayMode)}
+                className="sm:hidden"
+              >
+                <Maximize2 className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setShowSettings(!showSettings)}
+              >
+                <Settings className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </div>
 
