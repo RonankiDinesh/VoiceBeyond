@@ -1,15 +1,9 @@
-import { motion, Reorder, useDragControls } from "framer-motion";
+import { motion, useDragControls } from "framer-motion";
 import { X, Move } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
 
-interface CaptionOverlayProps {
-  caption: string;
-  fontSize: number;
-  onClose: () => void;
-}
-
-export const CaptionOverlay = ({ caption, fontSize, onClose }: CaptionOverlayProps) => {
+export const CaptionOverlay = ({ caption, fontSize, onClose }) => {
   const [opacity, setOpacity] = useState(0.95);
   const controls = useDragControls();
 

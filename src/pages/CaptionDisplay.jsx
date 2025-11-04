@@ -7,6 +7,7 @@ import { CaptionControls } from "@/components/CaptionControls";
 import { CaptionOverlay } from "@/components/CaptionOverlay";
 import { LatencyIndicator } from "@/components/LatencyIndicator";
 import { ConnectionStatus } from "@/components/ConnectionStatus";
+import VideoPlayer from "@/components/VideoPlayer";
 import { 
   Settings, 
   Maximize2,
@@ -15,22 +16,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
-interface Caption {
-  id: string;
-  text: string;
-  timestamp: number;
-  language: string;
-}
-
 export default function CaptionDisplay() {
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
-  const [captions, setCaptions] = useState<Caption[]>([]);
+  const [captions, setCaptions] = useState([]);
   const [currentCaption, setCurrentCaption] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [overlayMode, setOverlayMode] = useState(false);
-  const [latency, setLatency] = useState<"low" | "medium" | "high">("low");
+  const [latency, setLatency] = useState("low");
+  const [videoTime, setVideoTime] = useState(0);
   
   // Settings state
   const [outputLanguage, setOutputLanguage] = useState("en");
@@ -40,8 +35,9 @@ export default function CaptionDisplay() {
   const [highContrast, setHighContrast] = useState(false);
   const [dyslexiaFriendly, setDyslexiaFriendly] = useState(false);
 
-  const captionBoxRef = useRef<HTMLDivElement>(null);
+  const captionBoxRef = useRef(null);
   const source = searchParams.get("source");
+  const url = searchParams.get("url");
 
   // Mock WebSocket connection and caption generation
   useEffect(() => {
@@ -67,10 +63,10 @@ export default function CaptionDisplay() {
     let index = 0;
     const interval = setInterval(() => {
       if (index < mockCaptions.length) {
-        const newCaption: Caption = {
+        const newCaption = {
           id: Date.now().toString(),
           text: mockCaptions[index],
-          timestamp: Date.now(),
+          timestamp: videoTime,
           language: outputLanguage
         };
         
@@ -148,65 +144,84 @@ export default function CaptionDisplay() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-[1fr_320px] gap-6">
-          {/* Main Caption Display */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className={`rounded-2xl bg-card shadow-card border border-border p-8 ${
-              highContrast ? "bg-black text-white" : ""
-            } ${dyslexiaFriendly ? "font-mono" : ""}`}
-          >
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold mb-2">Live Captions</h2>
-              <p className="text-muted-foreground">
-                Source: {source === "microphone" ? "Live Microphone" : "YouTube"}
-              </p>
-            </div>
-
-            {/* Current Caption (Large) */}
-            <div className="mb-8 p-6 rounded-xl bg-muted/50 min-h-[120px] flex items-center justify-center">
-              <AnimatePresence mode="wait">
-                <motion.p
-                  key={currentCaption}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                  style={{ fontSize: `${fontSize}px` }}
-                  className="font-semibold text-center leading-relaxed"
-                >
-                  {currentCaption || "Waiting for audio..."}
-                </motion.p>
-              </AnimatePresence>
-            </div>
-
-            {/* Caption History */}
-            <div className="border-t border-border pt-6">
-              <h3 className="text-lg font-semibold mb-4">Caption History</h3>
-              <div
-                ref={captionBoxRef}
-                className="space-y-3 max-h-96 overflow-y-auto pr-4 custom-scrollbar"
-              >
-                {captions.map((caption, index) => (
-                  <motion.div
-                    key={caption.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 }}
-                    className="p-4 rounded-lg bg-muted/30"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <p className="flex-1">{caption.text}</p>
-                      <span className="text-xs text-muted-foreground whitespace-nowrap">
-                        {new Date(caption.timestamp).toLocaleTimeString()}
-                      </span>
-                    </div>
-                  </motion.div>
-                ))}
+        <div className="grid lg:grid-cols-[1fr_320px] gap-4 sm:gap-6">
+          {/* Main Content Area */}
+          <div className="space-y-4 sm:space-y-6">
+            {/* Video Player Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="rounded-2xl bg-card shadow-card border border-border overflow-hidden"
+            >
+              <div className="aspect-video w-full">
+                <VideoPlayer 
+                  source={source}
+                  url={url}
+                  onTimeUpdate={setVideoTime}
+                />
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+
+            {/* Caption Display */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className={`rounded-2xl bg-card shadow-card border border-border p-4 sm:p-8 ${
+                highContrast ? "bg-black text-white" : ""
+              } ${dyslexiaFriendly ? "font-mono" : ""}`}
+            >
+              <div className="mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold mb-2">Live Captions</h2>
+                <p className="text-sm sm:text-base text-muted-foreground">
+                  Source: {source === "microphone" ? "Live Microphone" : source === "youtube" ? "YouTube" : source === "upload" ? "Uploaded Video" : "Screen Audio"}
+                </p>
+              </div>
+
+              {/* Current Caption (Large) */}
+              <div className="mb-6 sm:mb-8 p-4 sm:p-6 rounded-xl bg-muted/50 min-h-[100px] sm:min-h-[120px] flex items-center justify-center">
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={currentCaption}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                    style={{ fontSize: `${fontSize}px` }}
+                    className="font-semibold text-center leading-relaxed"
+                  >
+                    {currentCaption || "Waiting for audio..."}
+                  </motion.p>
+                </AnimatePresence>
+              </div>
+
+              {/* Caption History */}
+              <div className="border-t border-border pt-4 sm:pt-6">
+                <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Caption History</h3>
+                <div
+                  ref={captionBoxRef}
+                  className="space-y-2 sm:space-y-3 max-h-64 sm:max-h-96 overflow-y-auto pr-2 sm:pr-4 custom-scrollbar"
+                >
+                  {captions.map((caption) => (
+                    <motion.div
+                      key={caption.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1 }}
+                      className="p-3 sm:p-4 rounded-lg bg-muted/30"
+                    >
+                      <div className="flex items-start justify-between gap-3 sm:gap-4">
+                        <p className="flex-1 text-sm sm:text-base">{caption.text}</p>
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">
+                          {Math.floor(caption.timestamp / 60)}:{String(Math.floor(caption.timestamp % 60)).padStart(2, '0')}
+                        </span>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </div>
 
           {/* Controls Sidebar */}
           {showSettings && (
