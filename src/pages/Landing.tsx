@@ -16,7 +16,7 @@ import {
 import { useRef } from "react";
 
 export default function Landing() {
-  const heroRef = useRef(null);
+  const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"]
