@@ -15,17 +15,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
-interface Caption {
-  id: string;
-  text: string;
-  timestamp: number;
-  language: string;
-}
-
 export default function CaptionDisplay() {
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
-  const [captions, setCaptions] = useState<Caption[]>([]);
+  const [captions, setCaptions] = useState([]);
   const [currentCaption, setCurrentCaption] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -40,7 +33,7 @@ export default function CaptionDisplay() {
   const [highContrast, setHighContrast] = useState(false);
   const [dyslexiaFriendly, setDyslexiaFriendly] = useState(false);
 
-  const captionBoxRef = useRef<HTMLDivElement>(null);
+  const captionBoxRef = useRef(null);
   const source = searchParams.get("source");
 
   // Mock WebSocket connection and caption generation
