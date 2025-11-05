@@ -18,7 +18,7 @@ export default function InputSelection() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [youtubeUrl, setYoutubeUrl] = useState("");
-  const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
+  const [selectedMethod, setSelectedMethod] = useState(null);
 
   const inputMethods = [
     {

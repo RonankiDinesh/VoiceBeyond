@@ -1,7 +1,11 @@
 import { motion } from "framer-motion";
 import { Activity } from "lucide-react";
 
-export const LatencyIndicator = ({ latency }) => {
+interface LatencyIndicatorProps {
+  latency: "low" | "medium" | "high";
+}
+
+export const LatencyIndicator = ({ latency }: LatencyIndicatorProps) => {
   const config = {
     low: { color: "text-green-500", bg: "bg-green-500/20", label: "Low Latency" },
     medium: { color: "text-yellow-500", bg: "bg-yellow-500/20", label: "Medium Latency" },

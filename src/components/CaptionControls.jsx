@@ -4,6 +4,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Slider } from "./ui/slider";
 import { Switch } from "./ui/switch";
 
+interface CaptionControlsProps {
+  outputLanguage: string;
+  setOutputLanguage: (value: string) => void;
+  captionMode: string;
+  setCaptionMode: (value: string) => void;
+  fontSize: number;
+  setFontSize: (value: number) => void;
+  captionSpeed: number;
+  setCaptionSpeed: (value: number) => void;
+  highContrast: boolean;
+  setHighContrast: (value: boolean) => void;
+  dyslexiaFriendly: boolean;
+  setDyslexiaFriendly: (value: boolean) => void;
+}
+
 export const CaptionControls = ({
   outputLanguage,
   setOutputLanguage,
@@ -17,7 +32,7 @@ export const CaptionControls = ({
   setHighContrast,
   dyslexiaFriendly,
   setDyslexiaFriendly,
-}) => {
+}: CaptionControlsProps) => {
   const languages = [
     { value: "en", label: "English" },
     { value: "hi", label: "Hindi" },

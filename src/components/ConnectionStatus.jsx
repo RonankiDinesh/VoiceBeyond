@@ -1,7 +1,11 @@
 import { motion } from "framer-motion";
 import { Wifi, WifiOff } from "lucide-react";
 
-export const ConnectionStatus = ({ isConnected }) => {
+interface ConnectionStatusProps {
+  isConnected: boolean;
+}
+
+export const ConnectionStatus = ({ isConnected }: ConnectionStatusProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
