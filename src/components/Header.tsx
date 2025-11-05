@@ -21,7 +21,7 @@ export const Header = () => {
             <Mic className="w-5 h-5 text-primary-foreground" />
           </div>
           <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            VoiceAccess
+            SunoSab
           </span>
         </Link>
 
@@ -32,9 +32,12 @@ export const Header = () => {
           <Link to="/select" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth">
             Start Captioning
           </Link>
-          <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth">
-            Features
-          </a>
+          {(location.pathname !== "/") ?
+            <a href="/#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth">
+              Features
+            </a> :<a href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth">
+              Features
+            </a>}
         </nav>
 
         <div className="flex items-center gap-4">

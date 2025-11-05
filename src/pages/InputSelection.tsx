@@ -21,49 +21,42 @@ export default function InputSelection() {
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
 
   const inputMethods = [
-    {
-      id: "youtube",
-      icon: Youtube,
-      title: "YouTube URL",
-      description: "Paste a YouTube video link to generate captions",
-      color: "from-red-500 to-red-600",
-      action: () => setSelectedMethod("youtube")
-    },
-    {
-      id: "upload",
-      icon: Upload,
-      title: "Upload Video",
-      description: "Upload your own video file for captioning",
-      color: "from-blue-500 to-blue-600",
-      action: () => {
-        toast({
-          title: "Coming Soon",
-          description: "Video upload feature will be available soon!"
-        });
-      }
-    },
-    {
-      id: "microphone",
-      icon: Mic,
-      title: "Live Microphone",
-      description: "Use your microphone for real-time speech captioning",
-      color: "from-green-500 to-green-600",
-      action: () => navigate("/captions?source=microphone")
-    },
-    {
-      id: "screen",
-      icon: Monitor,
-      title: "Screen Audio",
-      description: "Capture audio from your screen or applications",
-      color: "from-purple-500 to-purple-600",
-      action: () => {
-        toast({
-          title: "Coming Soon",
-          description: "Screen audio capture will be available soon!"
-        });
-      }
-    }
-  ];
+  {
+    id: "youtube",
+    icon: Youtube,
+    title: "YouTube URL",
+    description: "Paste a YouTube video link to generate captions",
+    color: "from-red-500 to-red-600",
+    action: () => navigate("/youtube")
+  },
+  {
+    id: "upload",
+    icon: Upload,
+    title: "Upload Video",
+    description: "Upload your own video file for captioning",
+    color: "from-blue-500 to-blue-600",
+    action: () => navigate("/upload-video")
+  },
+  {
+    id: "microphone",
+    icon: Mic,
+    title: "Live Microphone",
+    description: "Use your microphone for real-time speech captioning",
+    color: "from-green-500 to-green-600",
+    action: () => navigate("/microphone")
+  },
+  {
+    id: "screen",
+    icon: Monitor,
+    title: "Screen Audio",
+    description: "Capture audio from your screen or applications",
+    color: "from-purple-500 to-purple-600",
+    action: () => toast({
+      title: "Coming Soon",
+      description: "Screen audio capture will be available soon!"
+    })
+  }
+];
 
   const handleYoutubeSubmit = () => {
     if (!youtubeUrl) {
@@ -89,7 +82,7 @@ export default function InputSelection() {
         >
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Select Audio Input Source
+             A Multilingual Caption Generator
             </h1>
             <p className="text-xl text-muted-foreground">
               Choose how you want to capture audio for real-time captions
@@ -121,36 +114,7 @@ export default function InputSelection() {
             ))}
           </div>
 
-          {/* YouTube URL Input */}
-          {selectedMethod === "youtube" && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="max-w-2xl mx-auto"
-            >
-              <div className="p-8 rounded-2xl bg-card shadow-card border border-border">
-                <h3 className="text-xl font-bold mb-4">Enter YouTube URL</h3>
-                <div className="flex gap-4">
-                  <Input
-                    type="url"
-                    placeholder="https://www.youtube.com/watch?v=..."
-                    value={youtubeUrl}
-                    onChange={(e) => setYoutubeUrl(e.target.value)}
-                    className="flex-1 text-lg h-12"
-                  />
-                  <Button 
-                    onClick={handleYoutubeSubmit}
-                    size="lg"
-                    className="shadow-primary hover:shadow-glow transition-smooth"
-                  >
-                    Start Captioning
-                    <ArrowRight className="ml-2 w-5 h-5" />
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
-          )}
+  
         </motion.div>
       </main>
 

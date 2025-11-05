@@ -8,6 +8,11 @@ import InputSelection from "./pages/InputSelection";
 import CaptionDisplay from "./pages/CaptionDisplay";
 import NotFound from "./pages/NotFound";
 
+
+import YoutubePage from "./pages/YoutubePage";
+import UploadVideoPage from "./pages/UploadVideoPage";
+import MicrophonePage from "./pages/MicrophonePage";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -20,7 +25,13 @@ const App = () => (
           <Route path="/" element={<Landing />} />
           <Route path="/select" element={<InputSelection />} />
           <Route path="/captions" element={<CaptionDisplay />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+
+          {/* ✅ Add your new pages RIGHT HERE */}
+          <Route path="/youtube" element={<YoutubePage />} />
+          <Route path="/upload-video" element={<UploadVideoPage />} />
+          <Route path="/microphone" element={<MicrophonePage />} />
+
+          {/* ✅ Catch-all must stay LAST */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

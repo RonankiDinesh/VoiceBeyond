@@ -1,15 +1,14 @@
-import { motion, Reorder, useDragControls } from "framer-motion";
+import { motion, useDragControls } from "framer-motion";
 import { X, Move } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
 
-interface CaptionOverlayProps {
+interface DraggableCaptionProps {
   caption: string;
-  fontSize: number;
   onClose: () => void;
 }
 
-export const CaptionOverlay = ({ caption, fontSize, onClose }: CaptionOverlayProps) => {
+export const DraggableCaption = ({ caption, onClose }: DraggableCaptionProps) => {
   const [opacity, setOpacity] = useState(0.95);
   const controls = useDragControls();
 
@@ -38,43 +37,31 @@ export const CaptionOverlay = ({ caption, fontSize, onClose }: CaptionOverlayPro
           </div>
         </div>
 
+        {/* Close Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute -top-8 -right-8 opacity-0 group-hover:opacity-100 transition-opacity"
+          onClick={onClose}
+        >
+          <X className="w-4 h-4" />
+        </Button>
+
         {/* Caption Box */}
         <div
-          className=" w-full px-8 py-6 rounded-2xl backdrop-blur-xl border-2 border-primary/30 shadow-glow"
+          className="min-w-[400px] max-w-[90vw] px-6 py-4 rounded-xl backdrop-blur-xl border-2 border-primary/30 shadow-glow"
           style={{
-            background: `rgba(0, 0, 0, ${opacity * 0.8})`,
+            background: `hsl(var(--background) / ${opacity})`,
           }}
         >
           <motion.p
             key={caption}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            style={{ fontSize: `${fontSize}px` }}
-            className="font-semibold text-white text-center leading-relaxed"
+            className="text-xl text-center font-medium"
           >
-            {caption || "Waiting for audio..."}
+            {caption}
           </motion.p>
-        </div>
-
-        {/* Controls */}
-        <div className="absolute -top-8 right-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2">
-          <input
-            type="range"
-            min="0.3"
-            max="1"
-            step="0.1"
-            value={opacity}
-            onChange={(e) => setOpacity(parseFloat(e.target.value))}
-            className="w-24 h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
-          />
-          <Button
-            size="icon"
-            variant="destructive"
-            onClick={onClose}
-            className="rounded-full w-8 h-8"
-          >
-            <X className="w-4 h-4" />
-          </Button>
         </div>
       </motion.div>
     </motion.div>
