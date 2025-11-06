@@ -11,7 +11,7 @@ import { DraggableCaption } from "@/components/DraggableCaption";
 export default function YoutubePage() {
   const [url, setUrl] = useState("");
   const [videoId, setVideoId] = useState<string | null>(null);
-  const [language, setLanguage] = useState("Hindi");
+  const [language, setLanguage] = useState("hi");
   const [currentCaption, setCurrentCaption] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const [isDimmed, setIsDimmed] = useState(false);
@@ -68,7 +68,7 @@ export default function YoutubePage() {
 
       // Call backend API directly with axios
       const response = await axios.post("http://127.0.0.1:8000/api/captions", {
-        youtube_link: url, // must match FastAPI field
+        youtube_url: url, // must match FastAPI field
         language: language,
       }, {
         headers: {
@@ -78,7 +78,7 @@ export default function YoutubePage() {
 
       const result = response.data;
 
-      setCurrentCaption(result.transcription || "No transcription received.");
+      setCurrentCaption(result.caption || "No transcription received.");
       setShowOverlay(true);
       setIsConnected(true);
       setIsDimmed(true);
@@ -186,17 +186,6 @@ export default function YoutubePage() {
           <LanguageSelector onChange={setLanguage} scrollable />
         </div>
       </motion.div>
-
-      {/* Draggable Overlay */}
-      {showOverlay && currentCaption && (
-        <DraggableCaption
-          caption={currentCaption}
-          onClose={() => {
-            setShowOverlay(false);
-            setIsDimmed(false);
-          }}
-        />
-      )}
     </div>
   );
 }
