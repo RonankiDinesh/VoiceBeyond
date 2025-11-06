@@ -71,7 +71,7 @@ export default function InputSelection() {
   };
 
   return (
-    <div className="min-h-screen gradient-hero">
+    <div className="min-h-screen gradient-hero ">
       <Header />
 
       <main className="container mx-auto px-4 pt-32 pb-20">

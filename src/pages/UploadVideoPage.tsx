@@ -19,7 +19,9 @@ export default function UploadVideoPage() {
     }
   };
 
-  const handleUpload = () => {
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleUpload = async () => {
     if (!selectedFile) {
       toast({
         title: "No File Selected",
@@ -28,10 +30,66 @@ export default function UploadVideoPage() {
       });
       return;
     }
-    toast({
-      title: "Video Ready",
-      description: `Processing ${selectedFile.name} in ${language} captions.`,
+
+    // Log file details for debugging
+    console.log('File being uploaded:', {
+      name: selectedFile.name,
+      type: selectedFile.type,
+      size: `${(selectedFile.size / (1024 * 1024)).toFixed(2)} MB`
     });
+
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('video', selectedFile); // Changed 'file' to 'video' to match backend expectation
+      formData.append('language', language);
+
+      // Log FormData contents
+      console.log('FormData contents:');
+      for (let pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+
+      const response = await fetch('https://webhook.site/fa0e2daa-5ddd-49d8-a5e9-81073d8fae7c', {
+        method: 'POST',
+        body: formData,
+        // Remove Content-Type header - browser will set it automatically with boundary
+      });
+
+      console.log('Response status:', response.status);
+      const responseText = await response.text();
+      console.log('Response text:', responseText);
+
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (e) {
+        console.log('Response was not JSON:', responseText);
+        throw new Error('Invalid response format');
+      }
+
+      toast({
+        title: "Upload Successful",
+        description: "Your video is being processed for captions.",
+      });
+
+      // Log successful response
+      console.log('Upload successful:', data);
+      
+    } catch (error) {
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack
+      });
+      
+      toast({
+        title: "Upload Failed",
+        description: "There was an error uploading your video. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (

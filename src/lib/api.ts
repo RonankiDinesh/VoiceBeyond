@@ -7,6 +7,8 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  maxContentLength: Infinity,
+  maxBodyLength: Infinity,
 });
 
 // Type for backend response
