@@ -1,48 +1,49 @@
-import axios from 'axios';
+// lib/api.ts
+import axios from "axios";
 
-// Create an axios instance with default config
+// Create an axios instance
 const api = axios.create({
-  // Replace this with your real backend URL later
-  baseURL: 'http://localhost:3000',
+  baseURL: "http://127.0.0.1:8000/api", // FastAPI backend URL
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
+// Type for backend response
+interface CaptionResponse {
+  youtube_link: string;
+  language: string;
+  transcription: string;
+  raw_transcription: string;
+  simplified_text: string;
+}
+
+/**
+ * Sends YouTube URL + language to backend
+ * Returns the backend response directly
+ */
 export const startCaptioning = async (
-  url: string, 
-  language: string,
-  onCaption: (caption: { id: string; text: string; timestamp: number }) => void,
-  onError: (error: any) => void
-) => {
+  youtubeUrl: string,
+  language: string
+): Promise<CaptionResponse> => {
   try {
-    // First make the HTTP request to start the captioning process
-    const response = await api.post('/api/captions/start', {
-      url,
-      language,
+    const response = await api.post<CaptionResponse>("/captions", {
+      youtube_link: youtubeUrl, // Must match backend field
+      language: language,
     });
-    
-    // Create WebSocket connection
-    const ws = new WebSocket('ws://localhost:3000/ws/captions');
-    
-    ws.onmessage = (event) => {
-      const caption = JSON.parse(event.data);
-      onCaption(caption);
-    };
 
-    ws.onerror = (error) => {
-      onError(error);
-    };
-
-    // Return the WebSocket instance so we can close it later
-    return {
-      data: response.data,
-      websocket: ws
-    };
-  } catch (error) {
-    console.error('Error starting captioning:', error);
-    throw error;
+    return response.data; // return raw JSON from backend
+  } catch (err: unknown) {
+    if (axios.isAxiosError(err)) {
+      const message =
+        err.response?.data?.detail || // FastAPI errors are usually in "detail"
+        err.message ||
+        "Unknown server error";
+      throw new Error(message);
+    } else if (err instanceof Error) {
+      throw new Error(err.message);
+    } else {
+      throw new Error("Unexpected error occurred");
+    }
   }
 };
-
-export default api;

@@ -52,12 +52,6 @@ export default function Landing() {
     }
   ];
 
-  const stats = [
-    { value: "20+", label: "Languages" },
-    { value: "<100ms", label: "Latency" },
-    { value: "99%", label: "Accuracy" },
-    { value: "100%", label: "Free" }
-  ];
 
   return (
     <div className="min-h-screen">
@@ -79,7 +73,7 @@ export default function Landing() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8"
           >
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">Built for Hackathon 2025</span>
+            <span className="text-sm font-medium text-primary">Built for CodeUtsava 2025</span>
           </motion.div>
 
           <motion.h1
@@ -127,14 +121,6 @@ export default function Landing() {
             transition={{ delay: 0.6 }}
             className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20 max-w-4xl mx-auto"
           >
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
-                  {stat.value}
-                </div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
-              </div>
-            ))}
           </motion.div>
         </motion.div>
 
